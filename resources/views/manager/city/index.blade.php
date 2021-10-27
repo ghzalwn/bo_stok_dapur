@@ -76,7 +76,9 @@
                     <h4 class="modal-title">City</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="form-province" role="form">
+                    <form id="form-city" role="form">
+                        @csrf
+                        <input type="hidden" name="id">
                         <div class="form-group"><label>Province</label>
                             <select class="form-control m-b" name="province_id">
                                 <option value=""></option>
@@ -88,12 +90,11 @@
                         <div class="form-group"><label>City Name</label>
                             <input type="text" placeholder="Name of City" class="form-control" name="city">
                         </div>
-
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary btn-submit">Save changes</button>
                 </div>
             </div>
         </div>
@@ -102,9 +103,10 @@
 
 @section('script')
     <script src="{{ URL::asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ URL::asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.stok-dapur-datatable').DataTable({
+            var table = $('.stok-dapur-datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
@@ -142,8 +144,8 @@
                         name: 'id'
                     },
                     {
-                        data: 'province',
-                        name: 'province'
+                        data: 'city',
+                        name: 'city'
                     },
                     {
                         data: 'action',
@@ -156,6 +158,100 @@
 
             $(document).on('click', '.show-modal-forms', function() {
                 $('#modal-form').modal('show');
+            })
+
+            $('.btn-submit').click(function() {
+                let id = $('#form-city').find("[name='id']").val();
+                const formSubmit = $('#form-city').serialize()
+                $.ajax({
+                    method: id == '' ? 'POST' : 'PUT',
+                    url: id == '' ? "/manager/city/store" : '/manager/city/update/' + id,
+                    data: formSubmit,
+                    cache: false,
+                    success: function(response) {
+                        const {
+                            status,
+                            message
+                        } = response;
+                        if (status) {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "success"
+                            });
+                            table.ajax.reload();
+                            $('#modal-form').modal('hide');
+                        } else {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '#btn-edit', function() {
+                let id = $(this).data('id');
+                $.ajax({
+                    method: 'GET',
+                    url: "/manager/city/edit/" + id,
+                    cache: false,
+                    success: function(response) {
+                        const {
+                            status,
+                            message,
+                            data
+                        } = response;
+                        if (status) {
+                            $('#modal-form').find("[name='id']").val(data.id);
+                            $('#modal-form').find("[name='province_id']").val(data.province_id);
+                            $('#modal-form').find("[name='city']").val(data.city);
+                        } else {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
+                $('#modal-form').modal('show');
+            });
+
+
+            $(document).on('click', '#btn-delete', function() {
+                let id = $(this).data('id');
+                $.ajax({
+                    method: 'DELETE',
+                    url: "/manager/city/destroy/" + id,
+                    data: {
+                        "_token": "{{ csrf_token() }}"
+                    },
+                    cache: false,
+                    success: function(response) {
+                        const {
+                            status,
+                            message,
+                            data
+                        } = response;
+                        if (status) {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "success"
+                            });
+                            table.ajax.reload();
+                        } else {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
             })
         });
     </script>

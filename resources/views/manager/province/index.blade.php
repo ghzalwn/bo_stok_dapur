@@ -153,10 +153,11 @@
             })
 
             $('.btn-submit').click(function() {
+                let id = $('#form-province').find("[name='id']").val();
                 const formSubmit = $('#form-province').serialize()
                 $.ajax({
-                    method: 'POST',
-                    url: "/manager/province/store",
+                    method: id == '' ? 'POST' : 'PUT',
+                    url: id == '' ? "/manager/province/store" : '/manager/province/update/' + id,
                     data: formSubmit,
                     cache: false,
                     success: function(response) {
@@ -196,11 +197,8 @@
                             data
                         } = response;
                         if (status) {
-                            swal({
-                                title: "Message",
-                                text: message,
-                                type: "success"
-                            });
+                            $('#modal-form').find("[name='id']").val(data.id);
+                            $('#modal-form').find("[name='province']").val(data.province);
                         } else {
                             swal({
                                 title: "Message",

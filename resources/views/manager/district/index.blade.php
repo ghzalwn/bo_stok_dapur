@@ -51,60 +51,13 @@
                             <table class="table table-striped table-bordered table-hover stok-dapur-datatable">
                                 <thead>
                                     <tr>
-                                        <th>Rendering engine</th>
-                                        <th>Browser</th>
-                                        <th>Platform(s)</th>
-                                        <th>Engine version</th>
+                                        <th>ID</th>
+                                        <th>District</th>
                                         <th>CSS grade</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="gradeX">
-                                        <td>Trident</td>
-                                        <td>Internet
-                                            Explorer 4.0
-                                        </td>
-                                        <td>Win 95+</td>
-                                        <td class="center">4</td>
-                                        <td class="center">X</td>
-                                    </tr>
-                                    <tr class="gradeC">
-                                        <td>Trident</td>
-                                        <td>Internet
-                                            Explorer 5.0
-                                        </td>
-                                        <td>Win 95+</td>
-                                        <td class="center">5</td>
-                                        <td class="center">C</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <td>Trident</td>
-                                        <td>Internet
-                                            Explorer 5.5
-                                        </td>
-                                        <td>Win 95+</td>
-                                        <td class="center">5.5</td>
-                                        <td class="center">A</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <td>Trident</td>
-                                        <td>Internet
-                                            Explorer 6
-                                        </td>
-                                        <td>Win 98+</td>
-                                        <td class="center">6</td>
-                                        <td class="center">A</td>
-                                    </tr>
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Rendering engine</th>
-                                        <th>Browser</th>
-                                        <th>Platform(s)</th>
-                                        <th>Engine version</th>
-                                        <th>CSS grade</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
 
@@ -123,15 +76,30 @@
                     <h4 class="modal-title">Distict</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="form-province" role="form">
-                        <div class="form-group"><label>Province Name</label>
+                    <form id="form-district" role="form">
+                        @csrf
+                        <input type="hidden" name="id">
+                        <div class="form-group"><label>Province</label>
+                            <select class="form-control m-b" name="province_id">
+                                <option value=""></option>
+                                @foreach ($provinces as $prov)
+                                    <option value="{{ $prov->id }}">{{ $prov->province }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group"><label>City</label>
+                            <select class="form-control m-b" name="city_id">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>District Name</label>
                             <input type="text" placeholder="Name of Province" class="form-control" name="province">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary btn-submit">Save changes</button>
                 </div>
             </div>
         </div>
@@ -140,11 +108,14 @@
 
 @section('script')
     <script src="{{ URL::asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ URL::asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.stok-dapur-datatable').DataTable({
-                pageLength: 25,
+            var table = $('.stok-dapur-datatable').DataTable({
+                processing: true,
+                serverSide: true,
                 responsive: true,
+                ajax: "/manager/district/list",
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [{
                         extend: 'copy'
@@ -172,8 +143,121 @@
                                 .css('font-size', 'inherit');
                         }
                     }
+                ],
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'district',
+                        name: 'district'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: true,
+                        searchable: true
+                    },
                 ]
             });
+
+            $(document).on('click', '.show-modal-forms', function() {
+                $('#modal-form').modal('show');
+            })
+
+            $('.btn-submit').click(function() {
+                let id = $('#form-district').find("[name='id']").val();
+                const formSubmit = $('#form-district').serialize()
+                $.ajax({
+                    method: id == '' ? 'POST' : 'PUT',
+                    url: id == '' ? "/manager/district/store" : '/manager/district/update/' + id,
+                    data: formSubmit,
+                    cache: false,
+                    success: function(response) {
+                        const {
+                            status,
+                            message
+                        } = response;
+                        if (status) {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "success"
+                            });
+                            table.ajax.reload();
+                            $('#modal-form').modal('hide');
+                        } else {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '#btn-edit', function() {
+                let id = $(this).data('id');
+                $.ajax({
+                    method: 'GET',
+                    url: "/manager/district/edit/" + id,
+                    cache: false,
+                    success: function(response) {
+                        const {
+                            status,
+                            message,
+                            data
+                        } = response;
+                        if (status) {
+                            $('#modal-form').find("[name='id']").val(data.id);
+                            $('#modal-form').find("[name='province_id']").val(data.province_id);
+                            $('#modal-form').find("[name='city']").val(data.city);
+                        } else {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
+                $('#modal-form').modal('show');
+            });
+
+
+            $(document).on('click', '#btn-delete', function() {
+                let id = $(this).data('id');
+                $.ajax({
+                    method: 'DELETE',
+                    url: "/manager/district/destroy/" + id,
+                    data: {
+                        "_token": "{{ csrf_token() }}"
+                    },
+                    cache: false,
+                    success: function(response) {
+                        const {
+                            status,
+                            message,
+                            data
+                        } = response;
+                        if (status) {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "success"
+                            });
+                            table.ajax.reload();
+                        } else {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
+            })
         });
     </script>
 @endsection
