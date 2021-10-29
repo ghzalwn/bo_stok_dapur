@@ -20,6 +20,10 @@
 
     <link href="{{ URL::asset('css/plugins/dataTables/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/plugins/dropzone/basic.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/plugins/dropzone/dropzone.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/plugins/jasny/jasny-bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/plugins/codemirror/codemirror.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/animate.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/style.css') }}" rel="stylesheet">
 

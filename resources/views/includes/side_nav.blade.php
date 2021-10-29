@@ -37,6 +37,8 @@
                     <li><a href="{{ url('/manager/city') }}">City</a></li>
                     <li><a href="{{ url('/manager/district') }}">District</a></li>
                     <li><a href="{{ url('/manager/subdistrict') }}">Subdistrict</a></li>
+                    <li><a href="{{ url('/manager/status-order') }}">Status Order</a></li>
+                    <li><a href="{{ url('/manager/product-category') }}">Product Category</a></li>
                 </ul>
             </li>
             <li>

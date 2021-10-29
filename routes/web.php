@@ -5,8 +5,11 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Manager\CityController;
 use App\Http\Controllers\Manager\DistrictController;
 use App\Http\Controllers\Manager\ProvinceController;
+use App\Http\Controllers\Manager\StatusOrderController;
 use App\Http\Controllers\Manager\SubdistrictController;
+use App\Http\Controllers\Manager\ProductCategoryController;
 use App\Http\Controllers\Utils\RegionController;
+use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,6 +60,20 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('subdistrict/store', [SubdistrictController::class, 'store']);
         Route::put('subdistrict/update/{id}', [SubdistrictController::class, 'update']);
         Route::delete('subdistrict/destroy/{id}', [SubdistrictController::class, 'destroy']);
+
+        Route::get('status-order', [StatusOrderController::class, 'index']);
+        Route::get('status-order/list', [StatusOrderController::class, 'list']);
+        Route::get('status-order/edit/{id}', [StatusOrderController::class, 'edit']);
+        Route::post('status-order/store', [StatusOrderController::class, 'store']);
+        Route::put('status-order/update/{id}', [StatusOrderController::class, 'update']);
+        Route::delete('status-order/destroy/{id}', [StatusOrderController::class, 'destroy']);
+
+        Route::get('product-category', [ProductCategoryController::class, 'index']);
+        Route::get('product-category/list', [ProductCategoryController::class, 'list']);
+        Route::get('product-category/edit/{id}', [ProductCategoryController::class, 'edit']);
+        Route::post('product-category/store', [ProductCategoryController::class, 'store']);
+        Route::put('product-category/update/{id}', [ProductCategoryController::class, 'update']);
+        Route::delete('product-category/destroy/{id}', [ProductCategoryController::class, 'destroy']);
 
         Route::get('region/get-city-provid/{id}', [RegionController::class, 'getCityByProvId']);
         Route::get('region/get-district-cityid/{id}', [RegionController::class, 'getDistrictByCityId']);
