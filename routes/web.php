@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Manager\CityController;
 use App\Http\Controllers\Manager\DistrictController;
+use App\Http\Controllers\Manager\PaymentAccountController;
 use App\Http\Controllers\Manager\ProvinceController;
 use App\Http\Controllers\Manager\StatusOrderController;
 use App\Http\Controllers\Manager\SubdistrictController;
@@ -74,6 +75,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('product-category/store', [ProductCategoryController::class, 'store']);
         Route::put('product-category/update/{id}', [ProductCategoryController::class, 'update']);
         Route::delete('product-category/destroy/{id}', [ProductCategoryController::class, 'destroy']);
+
+        Route::get('payment-account', [PaymentAccountController::class, 'index']);
+        Route::get('payment-account/list', [PaymentAccountController::class, 'list']);
+        Route::get('payment-account/edit/{id}', [PaymentAccountController::class, 'edit']);
+        Route::post('payment-account/store', [PaymentAccountController::class, 'store']);
+        Route::put('payment-account/update/{id}', [PaymentAccountController::class, 'update']);
+        Route::delete('payment-account/destroy/{id}', [PaymentAccountController::class, 'destroy']);
 
         Route::get('region/get-city-provid/{id}', [RegionController::class, 'getCityByProvId']);
         Route::get('region/get-district-cityid/{id}', [RegionController::class, 'getDistrictByCityId']);

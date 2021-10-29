@@ -39,6 +39,7 @@
                     <li><a href="{{ url('/manager/subdistrict') }}">Subdistrict</a></li>
                     <li><a href="{{ url('/manager/status-order') }}">Status Order</a></li>
                     <li><a href="{{ url('/manager/product-category') }}">Product Category</a></li>
+                    <li><a href="{{ url('/manager/payment-account') }}">Payment Account</a></li>
                 </ul>
             </li>
             <li>

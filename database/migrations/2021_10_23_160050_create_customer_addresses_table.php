@@ -20,6 +20,7 @@ class CreateCustomerAddressesTable extends Migration
             $table->string('address_1');
             $table->string('address_2');
             $table->string('address_3');
+            $table->foreignUuid('customer_id')->constrained('customers');
             $table->foreignUuid('province_id')->constrained('provinces');
             $table->foreignUuid('city_id')->constrained('cities');
             $table->foreignUuid('district_id')->constrained('districts');

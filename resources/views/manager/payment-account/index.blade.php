@@ -3,7 +3,7 @@
 @section('content')
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
-            <h2>Product Category</h2>
+            <h2>Payment Account</h2>
             <ol class="breadcrumb">
                 <li>
                     <a>Home</a>
@@ -12,7 +12,7 @@
                     <a>Manager</a>
                 </li>
                 <li class="active">
-                    <strong>Product Category</strong>
+                    <strong>Payment Account</strong>
                 </li>
             </ol>
         </div>
@@ -70,22 +70,22 @@
     <div class="modal inmodal fade" id="modal-form" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
-                <form id="form-product-category" role="form" method="post" enctype="multipart/form-data">
+                <form id="form-account-number" role="form" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" class="form-control" name="id">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span
                                 aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Product Category</h4>
+                        <h4 class="modal-title">Payment Account</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group"><label>Category</label>
-                            <input type="text" placeholder="Category" class="form-control" name="category">
+                        <div class="form-group"><label>Account Name</label>
+                            <input type="text" placeholder="Account Name" class="form-control" name="account_name">
                         </div>
-                        <div class="form-group"><label>Url Category</label>
-                            <input type="text" placeholder="Url Category" class="form-control" name="url_category">
+                        <div class="form-group"><label>Account Number</label>
+                            <input type="text" placeholder="Account Number" class="form-control" name="account_name">
                         </div>
-                        <div class="form-group"><label> Icon</label>
+                        <div class="form-group"><label> Account Image</label>
                             <div class="fileinput fileinput-new input-group" data-provides="fileinput">
                                 <div class="form-control" data-trigger="fileinput">
                                     <i class="glyphicon glyphicon-file fileinput-exists"></i>
@@ -94,14 +94,14 @@
                                 <span class="input-group-addon btn btn-default btn-file">
                                     <span class="fileinput-new">Select file</span>
                                     <span class="fileinput-exists">Change</span>
-                                    <input type="file" name="category_icon" />
+                                    <input type="file" name="account_image" />
                                 </span>
                                 <a href="#" class="input-group-addon btn btn-default fileinput-exists"
                                     data-dismiss="fileinput">Remove</a>
                             </div>
                         </div>
                         <div class="form-group" id="image-temp" style="display: none;">
-                            <img src="cinqueterre.jpg" class="img-thumbnail" alt="Cinque Terre">
+                            <img src="" class="img-thumbnail" alt="Cinque Terre">
                         </div>
 
                     </div>
@@ -133,7 +133,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "/manager/product-category/list",
+                ajax: "/manager/payment-account/list",
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [{
                         extend: 'copy'
@@ -185,14 +185,14 @@
 
             $('.btn-submit').click(function(e) {
                 e.preventDefault();
-                let id = $('#form-product-category').find("[name='id']").val();
-                let form = $('#form-product-category')[0]
+                let id = $('#form-account-number').find("[name='id']").val();
+                let form = $('#form-account-number')[0]
                 let formData = new FormData(form);
 
                 $.ajax({
                     method: id == '' ? 'POST' : 'PUT',
-                    url: id == '' ? "/manager/product-category/store" :
-                        '/manager/product-category/update/' + id,
+                    url: id == '' ? "/manager/payment-account/store" :
+                        '/manager/payment-account/update/' + id,
                     data: formData,
                     cache: false,
                     processData: false,
@@ -210,7 +210,7 @@
                             });
                             table.ajax.reload();
                             $('#modal-form').modal('hide');
-                            $('#form-product-category')[0].reset()
+                            $('#form-account-number')[0].reset()
                         } else {
                             swal({
                                 title: "Message",
@@ -227,7 +227,7 @@
                 let id = $(this).data('id');
                 $.ajax({
                     method: 'GET',
-                    url: "/manager/product-category/edit/" + id,
+                    url: "/manager/payment-account/edit/" + id,
                     cache: false,
                     success: function(response) {
                         const {
@@ -237,12 +237,13 @@
                         } = response;
                         if (status) {
                             $('#modal-form').find("[name='id']").val(data.id);
-                            $('#modal-form').find("[name='category']").val(data.category);
-                            $('#modal-form').find("[name='url_category']").val(data
-                                .url_category);
+                            $('#modal-form').find("[name='account_name']").val(data
+                                .account_name);
+                            $('#modal-form').find("[name='account_number']").val(data
+                                .account_number);
                             $('#image-temp').find('.img-thumbnail').attr('src',
-                                '/images/uploads/product_category/' + data
-                                .category_icon);
+                                '/images/uploads/payment_account/' + data
+                                .account_image);
                             $('#image-temp').show();
                         } else {
                             swal({
@@ -261,7 +262,7 @@
                 let id = $(this).data('id');
                 $.ajax({
                     method: 'DELETE',
-                    url: "/manager/product-category/destroy/" + id,
+                    url: "/manager/payment-account/destroy/" + id,
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
