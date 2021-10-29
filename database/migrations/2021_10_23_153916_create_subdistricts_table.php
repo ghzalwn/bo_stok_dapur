@@ -20,6 +20,8 @@ class CreateSubdistrictsTable extends Migration
             $table->foreignUuid('district_id')->constrained('districts');
             $table->string('subdistrict');
             $table->string('postcode');
+            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUuid('updated_by')->constrained('users');
             $table->timestamps();
         });
     }

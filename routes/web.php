@@ -5,6 +5,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Manager\CityController;
 use App\Http\Controllers\Manager\DistrictController;
 use App\Http\Controllers\Manager\ProvinceController;
+use App\Http\Controllers\Manager\SubdistrictController;
+use App\Http\Controllers\Utils\RegionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,10 +51,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('district/update/{id}', [DistrictController::class, 'update']);
         Route::delete('district/destroy/{id}', [DistrictController::class, 'destroy']);
 
+        Route::get('subdistrict', [SubdistrictController::class, 'index']);
+        Route::get('subdistrict/list', [SubdistrictController::class, 'list']);
+        Route::get('subdistrict/edit/{id}', [SubdistrictController::class, 'edit']);
+        Route::post('subdistrict/store', [SubdistrictController::class, 'store']);
+        Route::put('subdistrict/update/{id}', [SubdistrictController::class, 'update']);
+        Route::delete('subdistrict/destroy/{id}', [SubdistrictController::class, 'destroy']);
 
-        // Route::get('city/list', [CityController::class, 'list']);
-
-        // Route::get('district/list', [DistrictController::class, 'list']);
-        // Route::get('subdistrict/list', [SubdistrictController::class, 'list']);
+        Route::get('region/get-city-provid/{id}', [RegionController::class, 'getCityByProvId']);
+        Route::get('region/get-district-cityid/{id}', [RegionController::class, 'getDistrictByCityId']);
     });
 });

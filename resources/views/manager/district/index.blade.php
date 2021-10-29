@@ -53,7 +53,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>District</th>
-                                        <th>CSS grade</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -93,7 +93,7 @@
                             </select>
                         </div>
                         <div class="form-group"><label>District Name</label>
-                            <input type="text" placeholder="Name of Province" class="form-control" name="province">
+                            <input type="text" placeholder="Name of District" class="form-control" name="district">
                         </div>
                     </form>
                 </div>
@@ -211,8 +211,19 @@
                         } = response;
                         if (status) {
                             $('#modal-form').find("[name='id']").val(data.id);
-                            $('#modal-form').find("[name='province_id']").val(data.province_id);
-                            $('#modal-form').find("[name='city']").val(data.city);
+
+                            setTimeout(() => {
+                                $('#modal-form').find("[name='province_id']").val(data
+                                        .province_id)
+                                    .change();
+                            }, 100);
+
+                            setTimeout(() => {
+                                $('#modal-form').find("[name='city_id']").val(data
+                                        .city_id)
+                                    .change();
+                            }, 300);
+                            $('#modal-form').find("[name='district']").val(data.district);
                         } else {
                             swal({
                                 title: "Message",
@@ -258,6 +269,37 @@
                     }
                 });
             })
+
+            $("[name='province_id']").on('change', function() {
+                let id = $(this).val();
+                $.ajax({
+                    method: 'GET',
+                    url: "/manager/region/get-city-provid/" + id,
+                    cache: false,
+                    success: function(response) {
+                        const {
+                            status,
+                            message,
+                            data
+                        } = response;
+                        if (status) {
+                            let optHtml = '';
+                            optHtml += '<option value=""></option>';
+                            $.each(data, function(index, op) {
+                                optHtml += '<option value="' + op.id + '">' + op.city +
+                                    '</option>';
+                            });
+                            $("[name='city_id']").html(optHtml);
+                        } else {
+                            swal({
+                                title: "Message",
+                                text: message,
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
+            });
         });
     </script>
 @endsection

@@ -18,6 +18,8 @@ class CreateDistrictsTable extends Migration
             $table->foreignUuid('province_id')->constrained('provinces');
             $table->foreignUuid('city_id')->constrained('cities');
             $table->string('district');
+            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUuid('updated_by')->constrained('users');
             $table->timestamps();
         });
     }

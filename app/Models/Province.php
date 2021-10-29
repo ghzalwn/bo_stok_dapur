@@ -35,4 +35,9 @@ class Province extends Model
             $model->updated_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
         });
     }
+
+    public function cities()
+    {
+        return $this->hasMany(City::class);
+    }
 }
