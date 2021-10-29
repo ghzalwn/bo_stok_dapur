@@ -82,6 +82,9 @@
                         <div class="form-group"><label>Category</label>
                             <input type="text" placeholder="Category" class="form-control" name="category">
                         </div>
+                        <div class="form-group"><label>Url Category</label>
+                            <input type="text" placeholder="Url Category" class="form-control" name="url_category">
+                        </div>
                         <div class="form-group"><label> Icon</label>
                             <div class="fileinput fileinput-new input-group" data-provides="fileinput">
                                 <div class="form-control" data-trigger="fileinput">
@@ -91,12 +94,16 @@
                                 <span class="input-group-addon btn btn-default btn-file">
                                     <span class="fileinput-new">Select file</span>
                                     <span class="fileinput-exists">Change</span>
-                                    <input type="file" name="..." />
+                                    <input type="file" name="category_icon" />
                                 </span>
                                 <a href="#" class="input-group-addon btn btn-default fileinput-exists"
                                     data-dismiss="fileinput">Remove</a>
                             </div>
                         </div>
+                        <div class="form-group" id="image-temp" style="">
+                            <img src="cinqueterre.jpg" class="img-thumbnail" alt="Cinque Terre">
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
@@ -188,6 +195,8 @@
                         '/manager/product-category/update/' + id,
                     data: formData,
                     cache: false,
+                    processData: false,
+                    contentType: false,
                     success: function(response) {
                         const {
                             status,
@@ -201,6 +210,7 @@
                             });
                             table.ajax.reload();
                             $('#modal-form').modal('hide');
+                            $('#form-product-category')[0].reset()
                         } else {
                             swal({
                                 title: "Message",
@@ -210,6 +220,7 @@
                         }
                     }
                 });
+
             });
 
             $(document).on('click', '#btn-edit', function() {
@@ -226,7 +237,13 @@
                         } = response;
                         if (status) {
                             $('#modal-form').find("[name='id']").val(data.id);
-                            $('#modal-form').find("[name='status']").val(data.status);
+                            $('#modal-form').find("[name='category']").val(data.category);
+                            $('#modal-form').find("[name='url_category']").val(data
+                                .url_category);
+                            $('#image-temp').find('.img-thumbnail').attr('src',
+                                '/images/uploads/product_category/' + data
+                                .category_icon);
+                            $
                         } else {
                             swal({
                                 title: "Message",

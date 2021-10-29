@@ -42,8 +42,8 @@ class ProductCategoryController extends Controller
         ]);
 
         $dataPost = $request->all();
-        $dataPost['category_icon'] = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $dataPost['category_icon']);
+        $dataPost['category_icon'] = time() . '.' . $request->category_icon->extension();
+        $request->category_icon->move(public_path('images') . '/uploads/product_category/', $dataPost['category_icon']);
         $dataPost['id'] = Uuid::uuid4()->toString();
 
         $save = ProductCategory::create($dataPost);
