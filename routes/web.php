@@ -90,6 +90,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('user/store', [UserController::class, 'store']);
         Route::put('user/update/{id}', [UserController::class, 'update']);
         Route::delete('user/destroy/{id}', [UserController::class, 'destroy']);
+        Route::get('user/change-password', [UserController::class, 'changePassword']);
+        Route::post('user/submit-change-password', [UserController::class, 'submitChangePassword']);
 
         Route::get('region/get-city-provid/{id}', [RegionController::class, 'getCityByProvId']);
         Route::get('region/get-district-cityid/{id}', [RegionController::class, 'getDistrictByCityId']);

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Manager;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 use Yajra\DataTables\DataTables;
 
@@ -84,5 +86,29 @@ class UserController extends Controller
         User::find($id)->delete();
 
         return response()->json(['status' => true, 'message' => 'delete success']);
+    }
+
+    public function changePassword()
+    {
+        return view('manager.user.change-password');
+    }
+
+    public function submitChangePassword(Request $request)
+    {
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        if (!Hash::check($user->password, $request->password_old)) {
+            return response()->json(['status' => false, 'message' => 'wrong password !']);
+        }
+
+        DB::beginTransaction();
+        try {
+            User::where('id', $id)->update($request->except(['_token']));
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'change password success']);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+            return response()->json(['status' => false, 'message' => 'change password failed']);
+        }
     }
 }

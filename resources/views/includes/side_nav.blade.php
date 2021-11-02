@@ -15,7 +15,7 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="profile.html">Change Password</a></li>
+                        <li><a href="{{ url('/manager/user/change-password') }}">Change Password</a></li>
                         <li class="divider"></li>
                         <li><a href="login.html">Logout</a></li>
                     </ul>
